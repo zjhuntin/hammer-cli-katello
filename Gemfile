@@ -12,6 +12,8 @@ group :test do
   gem 'minitest-spec-context'
   gem 'simplecov'
   gem 'mocha'
+  gem 'pry'
+  gem 'pry-nav'
 end
 
 # load local gemfile

@@ -78,12 +78,6 @@ module HammerCLIKatello
       success_message _("Activation key created")
       failure_message _("Could not create the activation key")
 
-      option "--unlimited-hosts", :flag, "Set hosts max to unlimited"
-
-      validate_options do
-        all(:option_unlimited_hosts, :option_max_hosts).rejected
-      end
-
       build_options
     end
 
