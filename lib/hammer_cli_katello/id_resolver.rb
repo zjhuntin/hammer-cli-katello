@@ -93,13 +93,15 @@ module HammerCLIKatello
 
       return options[key_id] if options[key_id]
 
-      begin
-        options[key_environment_id] ||= lifecycle_environment_id(
-          scoped_options("environment", options)
-        )
-      rescue HammerCLIForeman::MissingSeachOptions # rubocop:disable HandleExceptions
-        # Intentionally suppressing the exception,
-        # environment is not always required.
+      if options[key_environment_id]
+        begin
+          options[key_environment_id] ||= lifecycle_environment_id(
+            scoped_options("environment", options)
+          )
+        rescue HammerCLIForeman::MissingSeachOptions # rubocop:disable HandleExceptions
+          # Intentionally suppressing the exception,
+          # environment is not always required.
+        end
       end
 
       begin
