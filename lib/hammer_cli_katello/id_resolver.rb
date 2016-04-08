@@ -92,26 +92,17 @@ module HammerCLIKatello
       from_environment_id = HammerCLI.option_accessor_name("from_environment_id")
 
       return options[key_id] if options[key_id]
-
       if options[key_environment_id]
-        begin
-          options[key_environment_id] ||= lifecycle_environment_id(
-            scoped_options("environment", options)
-          )
-        rescue HammerCLIForeman::MissingSeachOptions # rubocop:disable HandleExceptions
-          # Intentionally suppressing the exception,
-          # environment is not always required.
-        end
+        options[key_environment_id] ||= search_and_rescue(
+          lifecycle_environment_id, "environment", options)
+        # Intentionally suppressing the exception,
+        # environment is not always required.
       end
 
-      begin
-        options[key_content_view_id] ||= content_view_id(
-          scoped_options("content_view", options)
-        )
-      rescue HammerCLIForeman::MissingSeachOptions # rubocop:disable HandleExceptions
-        # Intentionally suppressing the exception,
-        # content_view is not always required.
-      end
+      options[key_content_view_id] ||= search_and_rescue(
+        content_view_id, "content_view", options)
+      # Intentionally suppressing the exception,
+      # content_view is not always required.
 
       results = find_resources(:content_view_versions, options)
       options[from_environment_id] ||= from_lifecycle_environment_id(options)
@@ -205,6 +196,11 @@ module HammerCLIKatello
         opts[environment_id] = opts[from_environment_id]
       end
       lifecycle_environment_id(scoped_options("environment", search_options))
+    end
+
+    def search_and_rescue(search_function, resource, options)
+      search_function(scoped_options(resource, options))
+      rescue HammerCLIForeman::MissingSeachOptions # rubocop:disable HandleExceptions
     end
   end
   # rubocop:enable ClassLength
